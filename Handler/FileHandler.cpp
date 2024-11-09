@@ -6,10 +6,10 @@
 
 #include "FileHandler.h"
 
-namespace File {
+namespace dev::handler {
 
-FileHandler::FileHandler()
-    : m_maxHandleCount(MAX_HANDLE_COUNT),
+FileHandler::FileHandler(uint16_t maxHandleCount)
+    : m_maxHandleCount(maxHandleCount),
       m_currentHandleIdx(0),
       m_handleIdxArr(new std::fstream[m_maxHandleCount])
 {

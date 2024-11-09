@@ -10,13 +10,30 @@ add_definitions(-DSOURCE_DIR="${CMAKE_SOURCE_DIR}/Resources")
 
 # Header files
 set(HEADER_FILES
+    Helper/DeviceHelper.h
+
+    Command/AbstractCommand.h
+    Command/DrawCommand.h
+
     Handler/FileHandler.h
+    Handler/CommandHandler.h
+
+    Feature/DrawFeature.h
+
+    Device/AbstractDevice.h
+    Device/RoboticDevice.h
 )
 
 # Source files
 set(SOURCE_FILES
     main.cpp
+
     Handler/FileHandler.cpp
+    Handler/CommandHandler.cpp
+
+    Feature/DrawFeature.cpp
+
+    Device/RoboticDevice.cpp
 )
 
 add_executable(interview-home-test 
@@ -25,4 +42,12 @@ add_executable(interview-home-test
 )
 
 # Include directories if needed
+target_include_directories(interview-home-test PUBLIC
+ ${CMAKE_SOURCE_DIR}/Device
+ ${CMAKE_SOURCE_DIR}/Handler
+ ${CMAKE_SOURCE_DIR}/Command
+ ${CMAKE_SOURCE_DIR}/Feature
+ ${CMAKE_SOURCE_DIR}/Helper
+ )
+
 # Link libraries if needed
