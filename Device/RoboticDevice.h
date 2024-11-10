@@ -18,18 +18,27 @@ public:
     virtual ~RoboticDevice() = default;
 
     using AbstractFeaturePtr = dev::feature::AbstractFeaturePtr;
+    using FeatureType = dev::feature::FeatureType;
 
     std::string deviceName() const override;
     uint16_t deviceID() const override;
 
     void start() override;
     void stop() override;
+    void run() override;
 
-    void attachFeatures() override;
     void attachFeature(AbstractFeaturePtr&& feature);
 
+    template <class Feature = dev::feature::AbstractFeature>
+    std::shared_ptr<Feature> getFeature(FeatureType type);
+
 private:
-    std::map<uint16_t, AbstractFeaturePtr> m_features;
+    void startFeatures();
+    void stopFeatures();
+    bool readInputFile();
+    void sendCommand(const std::string& command);
+
+    std::map<FeatureType, AbstractFeaturePtr> m_features;
 };
 
 #endif // ROBOTICDEVICE_H

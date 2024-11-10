@@ -4,29 +4,39 @@
 * Description: This file contains the CommandHandler class which is responsible for handling commands.
 */
 
-#include <iostream>
-
 #include "CommandHandler.h"
 
 namespace dev::handler {
 
-void CommandHandler::addCommand(std::unique_ptr<AbstractCommand> command)
+CommandHandler::CommandHandler()
+    : m_commandConsumer(std::make_unique<CommandConsumer>())
 {
-    // TODO: implement condition variable for queue because
-    // it should be thread safe when doing the file handling
-    std::cout << "Adding command to queue" << std::endl;
-    m_commandQueue.push(std::move(command));
 }
 
-void CommandHandler::executeCommands()
+CommandHandler::~CommandHandler()
 {
-    // TODO: implement condition variable for queue because
-    // it should be thread safe when doing the file handling
-    std::cout << "Executing commands" << std::endl;
-    while (!m_commandQueue.empty()) {
-        m_commandQueue.pop();
-        std::cout << "Command executed" << std::endl;
-    }
+}
+
+void CommandHandler::start()
+{
+    std::cout << "CommandHandler started!" << std::endl;
+    m_commandConsumer->start();
+}
+
+void CommandHandler::stop()
+{
+    std::cout << "CommandHandler stopped!" << std::endl;
+    m_commandConsumer->stop();
+}
+
+void CommandHandler::send(const std::string& command) const
+{
+    std::cout << "Sending command: " << command << std::endl;
+}
+
+void CommandHandler::send(std::unique_ptr<AbstractCommand> command)
+{
+    m_commandConsumer->addCommand(std::move(command));
 }
 
 } // namespace dev::handler

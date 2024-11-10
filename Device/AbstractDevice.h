@@ -20,7 +20,7 @@ public:
     virtual void start() = 0;
     virtual void stop() = 0;
 
-    virtual void attachFeatures() = 0;
+    virtual void run() = 0;
 };
 
 #endif // ABSTRACTDEVICE_H

@@ -12,9 +12,8 @@
 namespace dev::feature {
 
 enum class FeatureType : uint16_t {
-    DRAW,
-    MOVE,
-    PRINT,
+    None,
+    Draw,
 };
 
 class AbstractFeature {
@@ -24,6 +23,10 @@ public:
     virtual ~AbstractFeature() = default;
 
     using AbstractHandlerPtr = dev::handler::AbstractHandlerPtr;
+    using HandlerType = dev::handler::HandlerType;
+
+    virtual void start() = 0;
+    virtual void stop() = 0;
 
     virtual FeatureType featureType() const = 0;
     virtual void addHandler(AbstractHandlerPtr&& handler) = 0;

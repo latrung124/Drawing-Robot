@@ -10,10 +10,15 @@ add_definitions(-DSOURCE_DIR="${CMAKE_SOURCE_DIR}/Resources")
 
 # Header files
 set(HEADER_FILES
+    utils/thread_guard.h
     Helper/DeviceHelper.h
 
+    Command/CommandId.h
     Command/AbstractCommand.h
+    Command/AbstractCommandResult.h
     Command/DrawCommand.h
+    Command/CommandConsumer.h
+    Command/CommandQueue.h
 
     Handler/FileHandler.h
     Handler/CommandHandler.h
@@ -27,6 +32,9 @@ set(HEADER_FILES
 # Source files
 set(SOURCE_FILES
     main.cpp
+
+    Command/CommandQueue.cpp
+    Command/CommandConsumer.cpp
 
     Handler/FileHandler.cpp
     Handler/CommandHandler.cpp
@@ -48,6 +56,7 @@ target_include_directories(interview-home-test PUBLIC
  ${CMAKE_SOURCE_DIR}/Command
  ${CMAKE_SOURCE_DIR}/Feature
  ${CMAKE_SOURCE_DIR}/Helper
+ ${CMAKE_SOURCE_DIR}/utils
  )
 
 # Link libraries if needed

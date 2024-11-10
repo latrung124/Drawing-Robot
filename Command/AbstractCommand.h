@@ -7,13 +7,8 @@
 #ifndef ABSTRACTCOMMAND_H
 #define ABSTRACTCOMMAND_H
 
+#include "CommandId.h"
 namespace dev::command {
-
-enum class CommandId : uint16_t {
-    None,
-    Draw,
-    Move,
-};
 
 class AbstractCommand {
 public:

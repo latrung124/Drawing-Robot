@@ -9,8 +9,7 @@
 
 #include "AbstractHandler.h"
 #include "AbstractCommand.h"
-
-#include <queue>
+#include "CommandConsumer.h"
 
 namespace dev::handler {
 
@@ -23,19 +22,23 @@ public:
     using AbstractHandler::AbstractHandler;
     using HandlerType = dev::handler::HandlerType;
     using AbstractCommand = dev::command::AbstractCommand;
+    using CommandConsumer = dev::command::CommandConsumer;
 
-    CommandHandler() = default;
-    virtual ~CommandHandler() = default;
+    CommandHandler();
+    virtual ~CommandHandler();
+
+    void start() override;
+    void stop() override;
 
     HandlerType type() const override {
         return HandlerType::Command;
     }
 
-    void addCommand(std::unique_ptr<AbstractCommand> command);
-    void executeCommands();
+    void send(const std::string& command) const;
 
 private:
-    std::queue<std::unique_ptr<AbstractCommand>> m_commandQueue;
+    void send(std::unique_ptr<AbstractCommand> command);
+    std::unique_ptr<CommandConsumer> m_commandConsumer;
 };
 
 } // namespace dev::handler

@@ -37,9 +37,11 @@ public:
     using AbstractHandler::AbstractHandler;
     using HandlerType = dev::handler::HandlerType;
 
-    FileHandler() = default;
+    FileHandler();
     ~FileHandler();
-    explicit FileHandler(uint16_t maxHandleCount);
+
+    void start() override;
+    void stop() override;
 
     HandlerType type() const override {
         return HandlerType::File;

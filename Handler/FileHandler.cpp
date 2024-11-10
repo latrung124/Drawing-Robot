@@ -8,8 +8,8 @@
 
 namespace dev::handler {
 
-FileHandler::FileHandler(uint16_t maxHandleCount)
-    : m_maxHandleCount(maxHandleCount),
+FileHandler::FileHandler()
+    : m_maxHandleCount(MAX_HANDLE_COUNT),
       m_currentHandleIdx(0),
       m_handleIdxArr(new std::fstream[m_maxHandleCount])
 {
@@ -18,6 +18,18 @@ FileHandler::FileHandler(uint16_t maxHandleCount)
 FileHandler::~FileHandler()
 {
     delete[] m_handleIdxArr;
+}
+
+void FileHandler::start()
+{
+    // Start the file handler
+    std::cout << "File handler started!" << std::endl;
+}
+
+void FileHandler::stop()
+{
+    // Stop the file handler
+    std::cout << "File handler stopped!" << std::endl;
 }
 
 int32_t FileHandler::openFile(const std::string& filePath, OpenMode mode) {
@@ -56,6 +68,7 @@ int32_t FileHandler::openFile(const std::string& filePath, OpenMode mode) {
         std::cerr << "Cannot open file: " << filePath << std::endl;
         return -1;
     }
+    std::cout << "File id: " << m_currentHandleIdx  << " opened!" << std::endl;
     return m_currentHandleIdx++;
 }
 
@@ -68,6 +81,7 @@ void FileHandler::closeFile(uint16_t handleIdx)
 
     if (m_handleIdxArr[handleIdx].is_open()) {
         m_handleIdxArr[handleIdx].close();
+        std::cout << "File id: " << handleIdx  << " closed!" << std::endl;
     }
 }
 
