@@ -8,6 +8,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Define the source directory as a macro
 add_definitions(-DSOURCE_DIR="${CMAKE_SOURCE_DIR}/Resources")
 
+# Add the subdirectories
+add_subdirectory(Library)
+
 # Header files
 set(HEADER_FILES
     utils/thread_guard.h
@@ -62,6 +65,12 @@ target_include_directories(draw-robot PUBLIC
  ${CMAKE_SOURCE_DIR}/Feature
  ${CMAKE_SOURCE_DIR}/Helper
  ${CMAKE_SOURCE_DIR}/utils
+ ${CMAKE_SOURCE_DIR}/Library/image-converter
+ ${CMAKE_SOURCE_DIR}/Library/draw-algorithm
  )
 
 # Link libraries if needed
+target_link_libraries(draw-robot
+    image-converter
+    draw-algorithm
+)
