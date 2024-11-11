@@ -4,6 +4,10 @@
 * Description: This file contains the CommandHandler class which is responsible for handling commands.
 */
 
+#include <sstream>
+
+#include "CommandFactory.h"
+#include "CommandHelper.h"
 #include "CommandHandler.h"
 
 namespace dev::handler {
@@ -29,14 +33,17 @@ void CommandHandler::stop()
     m_commandConsumer->stop();
 }
 
-void CommandHandler::send(const std::string& command) const
+void CommandHandler::send(const std::string_view& command) const
 {
-    std::cout << "Sending command: " << command << std::endl;
-}
-
-void CommandHandler::send(std::unique_ptr<AbstractCommand> command)
-{
-    m_commandConsumer->addCommand(std::move(command));
+    std::istringstream stream(command.data());
+    std::string commandName;
+    stream >> commandName;
+    std::cout << "Sending command: " << commandName << std::endl;
+    auto commanId = dev::helper::getCommandId(commandName);
+    auto commandPtr = dev::command::CommandFactory::getInstance().createCommand(commanId);
+    if (commandPtr) {
+        m_commandConsumer->addCommand(std::move(commandPtr));
+    }
 }
 
 } // namespace dev::handler

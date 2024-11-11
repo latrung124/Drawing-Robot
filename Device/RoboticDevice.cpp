@@ -21,6 +21,10 @@ void RoboticDevice::stop() {
 void RoboticDevice::startFeatures() {
     std::cout << "Starting features" << std::endl;
     for (auto& feature : m_features) {
+        if (!feature.second) {
+            std::cout << "feature was null! " << static_cast<uint16_t>(feature.first) << "\n";
+            return;
+        }
         feature.second->start();
     }
 }
@@ -28,6 +32,10 @@ void RoboticDevice::startFeatures() {
 void RoboticDevice::stopFeatures() {
     std::cout << "Stop features" << std::endl;
     for (auto& feature : m_features) {
+        if (!feature.second) {
+            std::cout << "feature was null! " << static_cast<uint16_t>(feature.first) << "\n";
+            return;
+        }
         feature.second->stop();
     }
 }
@@ -47,7 +55,7 @@ bool RoboticDevice::readInputFile() {
             std::string line;
             while (std::getline(fileHandler->getFileHandle(fileId), line)) {
                 std::cout << line << std::endl;
-                // sendCommand(line);
+                sendCommand(line);
             }
             fileHandler->closeFile(fileId);
         }
@@ -62,7 +70,7 @@ bool RoboticDevice::readInputFile() {
 void RoboticDevice::sendCommand(const std::string& command) {
     if (auto feature = getFeature<dev::feature::DrawFeature>(dev::feature::FeatureType::Draw); feature) {
         if (auto commandHandler = feature->getHandler<dev::handler::CommandHandler>(dev::handler::HandlerType::Command); commandHandler) {
-            commandHandler->send(command);
+            commandHandler->send(command.c_str());
         }
     }
 }

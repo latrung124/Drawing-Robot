@@ -12,11 +12,15 @@ add_definitions(-DSOURCE_DIR="${CMAKE_SOURCE_DIR}/Resources")
 set(HEADER_FILES
     utils/thread_guard.h
     Helper/DeviceHelper.h
+    Helper/CommandHelper.h
 
     Command/CommandId.h
+    Command/CommandUtil.h
     Command/AbstractCommand.h
     Command/AbstractCommandResult.h
+    Command/CommandFactory.h
     Command/DrawCommand.h
+    Command/DimensionCommand.h
     Command/CommandConsumer.h
     Command/CommandQueue.h
 
@@ -33,6 +37,7 @@ set(HEADER_FILES
 set(SOURCE_FILES
     main.cpp
 
+    Command/CommandFactory.cpp
     Command/CommandQueue.cpp
     Command/CommandConsumer.cpp
 
@@ -44,13 +49,13 @@ set(SOURCE_FILES
     Device/RoboticDevice.cpp
 )
 
-add_executable(interview-home-test 
+add_executable(draw-robot
     ${HEADER_FILES}
     ${SOURCE_FILES}
 )
 
 # Include directories if needed
-target_include_directories(interview-home-test PUBLIC
+target_include_directories(draw-robot PUBLIC
  ${CMAKE_SOURCE_DIR}/Device
  ${CMAKE_SOURCE_DIR}/Handler
  ${CMAKE_SOURCE_DIR}/Command

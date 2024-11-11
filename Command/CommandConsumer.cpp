@@ -6,25 +6,23 @@
 
 #include "CommandConsumer.h"
 #include "DrawCommand.h"
+#include "DimensionCommand.h"
 
 namespace dev::command {
 
 CommandConsumer::~CommandConsumer() {
+    thread_guard guard(m_looper);
 }
 
 void CommandConsumer::start() {
     m_isStop = false;
-    //TODO: fix the thread loop issue
-    // std::thread consumerThread(&CommandConsumer::loop, this);
-    // thread_guard loopTask(consumerThread);
+    m_looper =  std::thread(&CommandConsumer::loop, this);
 }
 
 void CommandConsumer::stop() {
     std::cout << "Stopping CommandConsumer" << std::endl;
-    std::lock_guard<std::mutex> lock(m_mutex);
     m_isStop = true;
-
-    m_conditionVariable.notify_one(); //ensure the thread is not blocked
+    m_conditionVariable.notify_all(); //ensure the thread is not blocked
 }
 
 bool CommandConsumer::isConsumerAvailable() const {
@@ -70,10 +68,18 @@ void CommandConsumer::consume(AbstractCommandPtr command) {
 
     switch (command->id())
     {
-    case CommandId::Draw: {
-        auto drawCommand = dynamic_cast<DrawCommand*>(command.get());
+    case CommandId::Dimension: {
+        auto dimensionCommand = dynamic_cast<DimensionCommand*>(command.get());
+        if (dimensionCommand) {
+            // Create a new dimension
+        }
+        break;
+    }
+    case CommandId::DrawLine: {
+        auto drawCommand = dynamic_cast<DrawLineCommand*>(command.get());
         if (drawCommand) {
             drawCommand->draw();
+            //Use internal algorithm library to get bytes array of bmp image
         }
         break;
     }
@@ -81,6 +87,7 @@ void CommandConsumer::consume(AbstractCommandPtr command) {
         auto moveCommand = dynamic_cast<MoveCommand*>(command.get());
         if (moveCommand) {
             moveCommand->move();
+            //Use internal algorithm library to get bytes array of bmp image
         }
         break;
     }

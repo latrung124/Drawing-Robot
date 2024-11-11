@@ -7,6 +7,8 @@
 #ifndef COMMANDHANDLER_H
 #define COMMANDHANDLER_H
 
+#include <string_view>
+
 #include "AbstractHandler.h"
 #include "AbstractCommand.h"
 #include "CommandConsumer.h"
@@ -34,10 +36,9 @@ public:
         return HandlerType::Command;
     }
 
-    void send(const std::string& command) const;
+    void send(const std::string_view& command) const;
 
 private:
-    void send(std::unique_ptr<AbstractCommand> command);
     std::unique_ptr<CommandConsumer> m_commandConsumer;
 };
 

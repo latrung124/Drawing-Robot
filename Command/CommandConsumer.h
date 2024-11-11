@@ -36,8 +36,9 @@ private:
     void loop();
     void consume(AbstractCommandPtr command);
 
-    std::mutex m_mutex;
+    mutable std::mutex m_mutex;
     std::condition_variable m_conditionVariable;
+    std::thread m_looper;
     CommandQueue m_commandQueue;
     bool m_isStop = false;
 };

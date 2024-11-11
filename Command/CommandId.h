@@ -11,7 +11,9 @@ namespace dev::command {
 
 enum class CommandId : uint16_t {
     None,
-    Draw,
+    Dimension,
+    DrawLine,
+    DrawCircle,
     Move,
 };
 
