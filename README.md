@@ -34,3 +34,9 @@ cmake ..
 ```bash
 cmake --build .
 ```
+## Software High Level Design
+### Class Diagram
+![HighLevelClassDiagram](https://github.com/user-attachments/assets/66adee1e-b378-4242-99a4-ca3dd83c9c47)
+
+### Sequence Diagram
+![HighLevelSequenceDiagram](https://github.com/user-attachments/assets/fa9e0b0a-9e7e-4a0c-a0c0-fe4d9fb19851)
