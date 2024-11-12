@@ -10,9 +10,8 @@
 #include <iostream>
 #include <fstream>
 
-namespace File {
-
-using fstream = std::fstream;
+#include "AbstractHandler.h"
+namespace dev::handler {
 
 constexpr uint16_t MAX_HANDLE_COUNT = 10;
 
@@ -22,7 +21,12 @@ enum class OpenMode {
     ToReadWrite,
 };
 
-class FileHandler {
+class FileHandler;
+using FileHandlerPtr = std::shared_ptr<FileHandler>;
+
+using fstream = std::fstream;
+
+class FileHandler : public AbstractHandler {
 private:
     uint16_t m_maxHandleCount;
     uint16_t m_currentHandleIdx;
@@ -30,8 +34,18 @@ private:
     fstream* m_handleIdxArr = nullptr;
 
 public:
+    using AbstractHandler::AbstractHandler;
+    using HandlerType = dev::handler::HandlerType;
+
     FileHandler();
     ~FileHandler();
+
+    void start() override;
+    void stop() override;
+
+    HandlerType type() const override {
+        return HandlerType::File;
+    }
 
     int32_t openFile(const std::string& filePath, OpenMode mode);
     void closeFile(uint16_t handleIdx);
