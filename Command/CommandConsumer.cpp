@@ -34,7 +34,7 @@ void CommandConsumer::stop() {
     m_conditionVariable.notify_all(); //ensure the thread is not blocked
 }
 
-bool CommandConsumer::isConsumerAvailable() const {
+bool CommandConsumer::canProcessCommands() const {
     return m_isStop || m_commandQueue.isAvailable();
 }
 
@@ -52,7 +52,7 @@ void CommandConsumer::loop() {
         std::unique_lock<std::mutex> lock(m_mutex);
         std::cerr << "CommandConsumer is waiting... \n";
         m_conditionVariable.wait(lock, [this] {
-            return isConsumerAvailable();
+            return canProcessCommands();
         });
 
         if (m_isStop && !m_commandQueue.isAvailable()) {
@@ -73,9 +73,11 @@ void CommandConsumer::loop() {
 
 bool CommandConsumer::consumeDimensionCommand(AbstractCommand* command) {
     auto dimensionCommand = dynamic_cast<DimensionCommand*>(command);
-    dev::command::CommandResult result = dev::command::CommandResult::Success;
-    if (dimensionCommand) {
-        // Create a new dimension
+    if (!dimensionCommand) {
+        return false;
+    }
+
+    try {
         if (!m_commandHandler->dataStorage().lock()) {
             std::cerr << "Data storage is not available!" << std::endl;
             return false;
@@ -92,26 +94,33 @@ bool CommandConsumer::consumeDimensionCommand(AbstractCommand* command) {
         data.map2D.data.resize(data.map2D.width, std::vector<uint16_t>(data.map2D.height, 0));
         dataStorage->storeData(data);
 
+        std::cout << "New dimension: " << data.map2D.width << "x" << data.map2D.height << std::endl;
         return true;
+    } catch (const std::exception& e) {
+        std::cerr << "Failed to consume DimensionCommand: " << e.what() << std::endl;
+        return false;
     }
-    return false;
 }
 
 bool CommandConsumer::consumeDrawLineCommand(AbstractCommand *command) {
-    auto drawCommand = dynamic_cast<DrawLineCommand*>(command);
-    if (drawCommand) {
-        if (!m_commandHandler->dataStorage().lock()) {
+    auto drawCommand = dynamic_cast<DrawLineCommand *>(command);
+    if (!drawCommand) {
+        return false;
+    }
+    try {
+        auto dataStorage = std::dynamic_pointer_cast<dev::data::RoboticDataStorage>(m_commandHandler->dataStorage().lock());
+        if (!dataStorage) {
             std::cerr << "Data storage is not available!" << std::endl;
             return false;
         }
-        if (m_commandHandler->dataStorage().lock()->type() != dev::data::DataStorageType::RoboticDataStorage) {
-            std::cerr << "Data storage is not RoboticDataStorage!" << std::endl;
+
+        auto roboticData = dataStorage->getData();
+        auto target = drawCommand->getLine().points.back();
+        if (target.x >= roboticData.map2D.width || target.y >= roboticData.map2D.height) {
+            std::cerr << "Invalid draw line command!" << std::endl;
             return false;
         }
 
-        auto dataStorage = std::dynamic_pointer_cast<dev::data::RoboticDataStorage>(m_commandHandler->dataStorage().lock());
-        auto roboticData = dataStorage->getData();
-        auto target = drawCommand->getLine().points.back();
         draw_algorithm::draw_data drawData;
         drawData.type = draw_algorithm::utils::draw_type::LINE;
         drawData.start.x = roboticData.pos.x;
@@ -121,39 +130,50 @@ bool CommandConsumer::consumeDrawLineCommand(AbstractCommand *command) {
         drawData.grid.width = roboticData.map2D.width;
         drawData.grid.height = roboticData.map2D.height;
         drawData.grid.data.assign(roboticData.map2D.data.begin(), roboticData.map2D.data.end());
+
         draw_algorithm::draw_algorithm drawAlgorithm;
         auto positions = drawAlgorithm.drawLine(drawData);
+
         for (auto& pos : positions) {
             roboticData.map2D.data[pos.x][pos.y] = 1;
         }
-        dataStorage->storeData(roboticData);
 
+        dataStorage->storeData(roboticData);
         return true;
+
+    } catch (const std::exception& e) {
+        std::cerr << "Failed to consume DrawLineCommand: " << e.what() << std::endl;
+        return false;
     }
-    return false;
 }
 
 bool CommandConsumer::consumeMoveCommand(AbstractCommand *command) {
     auto moveCommand = dynamic_cast<MoveCommand*>(command);
-    if (moveCommand) {
-        if (!m_commandHandler->dataStorage().lock()) {
+    if (!moveCommand) {
+        return false;
+    }
+
+    try {
+        auto dataStorage = std::dynamic_pointer_cast<dev::data::RoboticDataStorage>(m_commandHandler->dataStorage().lock());
+        if (!dataStorage) {
             std::cerr << "Data storage is not available!" << std::endl;
             return false;
         }
-        if (m_commandHandler->dataStorage().lock()->type() != dev::data::DataStorageType::RoboticDataStorage) {
-            std::cerr << "Data storage is not RoboticDataStorage!" << std::endl;
+
+        auto roboticData = dataStorage->getData();
+        if (moveCommand->getPoint().x >= roboticData.map2D.width || moveCommand->getPoint().y >= roboticData.map2D.height) {
+            std::cerr << "Invalid move command!" << std::endl;
             return false;
         }
-
-        auto dataStorage = std::dynamic_pointer_cast<dev::data::RoboticDataStorage>(m_commandHandler->dataStorage().lock());
-        auto roboticData = dataStorage->getData();
         roboticData.pos.x = moveCommand->getPoint().x;
         roboticData.pos.y = moveCommand->getPoint().y;
+
         dataStorage->storeData(roboticData);
         return true;
+    } catch (const std::exception& e) {
+        std::cerr << "Failed to consume MoveCommand: " << e.what() << std::endl;
+        return false;
     }
-
-    return false;
 }
 
 void CommandConsumer::consume(AbstractCommandPtr command) {

@@ -7,8 +7,6 @@
 #ifndef ABSTRACTDATASTORAGE_H
 #define ABSTRACTDATASTORAGE_H
 
-#include <iostream>
-
 namespace dev::data {
 
 enum class DataStorageType {

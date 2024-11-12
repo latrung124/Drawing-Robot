@@ -17,7 +17,7 @@ FileHandler::FileHandler()
 
 FileHandler::~FileHandler()
 {
-    delete[] m_handleIdxArr;
+    stop();
 }
 
 void FileHandler::start()
@@ -29,6 +29,13 @@ void FileHandler::start()
 void FileHandler::stop()
 {
     // Stop the file handler
+    for (auto i = 0; i < m_maxHandleCount; ++i) {
+        if (m_handleIdxArr[i].is_open()) {
+            m_handleIdxArr[i].close();
+        }
+    }
+
+    delete[] m_handleIdxArr;
     std::cout << "File handler stopped!" << std::endl;
 }
 
@@ -39,23 +46,24 @@ int32_t FileHandler::openFile(const std::string& filePath, OpenMode mode) {
         return -1;
     }
 
-    if (m_handleIdxArr[m_currentHandleIdx].is_open()) {
-        m_handleIdxArr[m_currentHandleIdx].close();
+    auto& fileHandle = m_handleIdxArr[m_currentHandleIdx];
+    if (fileHandle.is_open()) {
+        fileHandle.close();
         std::cerr << "File handle is already open. Closing the file." << std::endl;
         return m_currentHandleIdx++;
     }
 
     switch(mode) {
         case OpenMode::ToRead: {
-            m_handleIdxArr[m_currentHandleIdx].open(filePath, std::ios::in);
+            fileHandle.open(filePath, std::ios::in);
             break;
         }
         case OpenMode::ToWrite: {
-            m_handleIdxArr[m_currentHandleIdx].open(filePath, std::ios::out);
+            fileHandle.open(filePath, std::ios::out);
             break;
         }
         case OpenMode::ToReadWrite: {
-            m_handleIdxArr[m_currentHandleIdx].open(filePath, std::ios::in | std::ios::out);
+            fileHandle.open(filePath, std::ios::in | std::ios::out);
             break;
         }
         default: {
@@ -64,11 +72,11 @@ int32_t FileHandler::openFile(const std::string& filePath, OpenMode mode) {
         }
     }
 
-    if (!m_handleIdxArr[m_currentHandleIdx].is_open()) {
+    if (!fileHandle.is_open()) {
         std::cerr << "Cannot open file: " << filePath << std::endl;
         return -1;
     }
-    std::cout << "File id: " << m_currentHandleIdx  << " opened!" << std::endl;
+
     return m_currentHandleIdx++;
 }
 
@@ -82,13 +90,18 @@ void FileHandler::closeFile(uint16_t handleIdx)
     if (m_handleIdxArr[handleIdx].is_open()) {
         m_handleIdxArr[handleIdx].close();
         std::cout << "File id: " << handleIdx  << " closed!" << std::endl;
+    } else {
+        std::cerr << "File id: " << handleIdx  << " is not open!" << std::endl;
     }
 }
 
-fstream& FileHandler::getFileHandle(uint16_t handleIdx)
+fstream& FileHandler::getFileHandle(uint16_t handleIdx) const
 {
+    if (handleIdx >= m_maxHandleCount || handleIdx < 0) {
+        throw std::out_of_range("Invalid handle index.");
+    }
+
     return m_handleIdxArr[handleIdx];
 }
 
 } // namespace File
-

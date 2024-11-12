@@ -9,8 +9,6 @@
 
 namespace dev::command {
 
-using AbstractCommandPtr = CommandQueue::AbstractCommandPtr;
-
 bool CommandQueue::isAvailable() const {
     return !m_commandQueue.empty();
 }

@@ -35,6 +35,8 @@ private:
     Callback m_callback;
 };
 
+using AbstractCommandPtr = std::unique_ptr<AbstractCommand>;
+
 } // namespace dev::command
 
 #endif // ABSTRACTCOMMAND_H

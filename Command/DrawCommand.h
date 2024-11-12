@@ -16,8 +16,8 @@
 namespace dev::command {
 
 struct Point {
-    int x;
-    int y;
+    uint16_t x;
+    uint16_t y;
 };
 
 struct Line {
@@ -55,7 +55,6 @@ public:
     }
 
     void draw() {
-        // Draw
         std::cout << "Drawing line" << std::endl;
     }
 
@@ -73,7 +72,6 @@ public:
     }
 
     void draw() {
-        // Draw
         std::cout << "Drawing circle" << std::endl;
     }
 };
@@ -97,7 +95,6 @@ public:
     }
 
     void move() {
-        // Move
         std::cout << "Moving" << std::endl;
     }
 

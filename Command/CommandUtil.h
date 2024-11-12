@@ -14,7 +14,7 @@
 
 namespace dev::command {
 
-static const std::unordered_map<std::string_view, CommandId> gCommandIdMap = {
+inline const std::unordered_map<std::string_view, CommandId> gCommandIdMap = {
     {"None", CommandId::None},
     {"DIMENSION", CommandId::Dimension},
     {"LINE_TO", CommandId::DrawLine},

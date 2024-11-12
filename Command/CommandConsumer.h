@@ -32,15 +32,13 @@ public:
     CommandConsumer(const handler::CommandHandler *commandHandler);
     ~CommandConsumer();
 
-    using AbstractCommandPtr = CommandQueue::AbstractCommandPtr;
-
     void start();
     void stop();
 
     void addCommand(AbstractCommandPtr command);
 
 private:
-    bool isConsumerAvailable() const;
+    bool canProcessCommands() const;
     void loop();
     void consume(AbstractCommandPtr command);
 

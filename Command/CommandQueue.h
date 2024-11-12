@@ -25,8 +25,6 @@ public:
     CommandQueue() = default;
     ~CommandQueue() = default;
 
-    using AbstractCommandPtr = std::unique_ptr<AbstractCommand>;
-
     void push(AbstractCommandPtr command);
     AbstractCommandPtr pop();
 

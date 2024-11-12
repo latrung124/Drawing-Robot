@@ -36,23 +36,20 @@ public:
     void addHandler(AbstractHandlerPtr&& handler) override;
 
     template<class Handler = dev::handler::AbstractHandler>
-    std::shared_ptr<Handler> getHandler(HandlerType type) {
-        if (type == HandlerType::None) {
-            std::cout << "Handler type is None" << std::endl;
-            return nullptr;
-        }
-
-        if (m_handlerMap.find(type) == m_handlerMap.end()) {
-            std::cout << "Handler type not found" << std::endl;
-            return nullptr;
-        }
-
-        return std::dynamic_pointer_cast<Handler>(m_handlerMap[type]);
-    }
+    std::shared_ptr<Handler> getHandler(HandlerType type) const;
 
 private:
     std::map<HandlerType, AbstractHandlerPtr> m_handlerMap;
 };
+
+template<class Handler>
+std::shared_ptr<Handler> DrawFeature::getHandler(HandlerType type) const {
+    auto it = m_handlerMap.find(type);
+    if (it != m_handlerMap.end()) {
+        return std::dynamic_pointer_cast<Handler>(it->second);
+    }
+    return nullptr;
+}
 
 } // namespace dev::feature
 

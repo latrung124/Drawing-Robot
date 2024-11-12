@@ -18,7 +18,6 @@ void RoboticDevice::start() {
 
 void RoboticDevice::stop() {
     // Stop the robotic device
-    // Do some clean up stuff
     stopFeatures();
 }
 
@@ -71,6 +70,9 @@ bool RoboticDevice::readInputFile() {
                 m_commandCount++;
             }
             fileHandler->closeFile(fileId);
+        } else {
+            std::cerr << "File handler not found" << std::endl;
+            return false;
         }
     } else {
         std::cout << "Feature not found" << std::endl;
@@ -91,10 +93,9 @@ void RoboticDevice::writeOutputFile() {
                 int32_t fileTextId = fileHandler->openFile(std::string(SOURCE_DIR) + "/OutputFiles/output.txt",
                                       dev::handler::OpenMode::ToWrite);                                      
 
-                image_converter::image_converter converter;
                 if (auto roboticData = std::dynamic_pointer_cast<dev::data::RoboticDataStorage>(m_dataStorage); roboticData) {
+                    image_converter::image_converter converter;
                     auto gridBytes = converter.gridToImageBytes(roboticData->getData().map2D.data);
-
                     image_converter::image_converter::image_16bit_data image;
                     image.width = roboticData->getData().map2D.width;
                     image.height = roboticData->getData().map2D.height;
@@ -111,10 +112,14 @@ void RoboticDevice::writeOutputFile() {
                     }
                     fileHandler->getFileHandle(fileTextId).write(textResult.c_str(), textResult.size());
                     fileHandler->getFileHandle(fileImageId).write(reinterpret_cast<const char*>(bytes.data()), bytes.size());
+                } else {
+                    std::cerr << "Robotic data storage not found" << std::endl;
                 }
                 isDeviceRunning = false;
                 fileHandler->closeFile(fileImageId);
                 std::cout << "Output file written" << std::endl;
+            } else {
+                std::cerr << "File handler not found" << std::endl;
             }
         }
     });
@@ -136,7 +141,11 @@ void RoboticDevice::sendCommand(const std::string& command) {
                 }
             };
             commandHandler->send(command.c_str(), callBack);
+        } else {
+            std::cerr << "Command handler not found" << std::endl;
         }
+    } else {
+        std::cerr << "Draw Feature not found" << std::endl;
     }
 }
 

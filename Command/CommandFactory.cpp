@@ -13,8 +13,6 @@
 
 namespace dev::command {
 
-using AbstractCommandPtr = CommandFactory::AbstractCommandPtr;
-
 CommandFactory& CommandFactory::getInstance() {
     static CommandFactory instance;
     return instance;
@@ -36,34 +34,64 @@ AbstractCommandPtr CommandFactory::createCommand(CommandId id, const std::string
 }
 
 std::unique_ptr<DimensionCommand> CommandFactory::constructDimensionCommand(const std::string& commandInfo) {
-    std::istringstream stream(commandInfo);
     //apply for square grid dimension
-    int height;
-    stream >> height;
+    uint16_t height = 0;
+
+    std::istringstream stream(commandInfo);
+    while (stream.good()) {
+        if (!(stream >> height)) {
+            throw std::invalid_argument("Invalid commandInfo format: " + commandInfo);
+        }
+    }
+
     if (height <= 0) {
-        std::cerr << "Invalid height" << std::endl;
-        return nullptr;
+        throw std::invalid_argument("commandInfo must contain a valid height: " + commandInfo);
+    } else if (height > UINT16_MAX) {
+        height = UINT16_MAX;
     }
 
     return std::make_unique<DimensionCommand>(Dimension{height, height});
 }
 
 std::unique_ptr<DrawLineCommand> CommandFactory::constructDrawLineCommand(const std::string& commandInfo) {
-    std::istringstream stream(commandInfo);
     std::vector<Point> points;
-    Point endPoint;
-    char comma;
-    stream >> endPoint.x >> comma >> endPoint.y;
-    points.push_back(endPoint);
+
+    std::istringstream stream(commandInfo);
+    while (stream.good()) {
+        Point point;
+        char comma;
+        if (!(stream >> point.x >> comma >> point.y)) {
+            throw std::invalid_argument("Invalid commandInfo format: " + commandInfo);
+        }
+
+        if (point.x < 0 || point.y < 0 || point.x > UINT16_MAX || point.y > UINT16_MAX) {
+            throw std::invalid_argument("commandInfo must contain valid points: " + commandInfo);
+        }
+
+        points.push_back(point);
+    }
+
+    if (points.empty()) {
+        throw std::invalid_argument("commandInfo must contain at least one point: " + commandInfo);
+    }
 
     return std::make_unique<DrawLineCommand>(Line{points});
 }
 
 std::unique_ptr<MoveCommand> CommandFactory::constructMoveCommand(const std::string& commandInfo) {
-    std::istringstream stream(commandInfo);
     Point point;
-    char comma;
-    stream >> point.x >> comma >> point.y;
+    
+    std::istringstream stream(commandInfo);
+    while (stream.good()) {
+        char comma;
+        if (!(stream >> point.x >> comma >> point.y)) {
+            throw std::invalid_argument("Invalid commandInfo format: " + commandInfo);
+        }
+    }
+
+    if (point.x < 0 || point.y < 0 || point.x > UINT16_MAX || point.y > UINT16_MAX) {
+        throw std::invalid_argument("commandInfo must contain valid point: " + commandInfo);
+    }
 
     return std::make_unique<MoveCommand>(point);
 }

@@ -24,8 +24,6 @@ public:
 
     virtual ~CommandFactory() = default;
 
-    using AbstractCommandPtr = std::unique_ptr<AbstractCommand>;
-
     AbstractCommandPtr createCommand(CommandId id, const std::string& commandInfo);
 
 private:

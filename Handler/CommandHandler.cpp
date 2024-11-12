@@ -19,6 +19,7 @@ CommandHandler::CommandHandler()
 
 CommandHandler::~CommandHandler()
 {
+    stop();
 }
 
 void CommandHandler::start()
@@ -39,18 +40,32 @@ void CommandHandler::send(const std::string_view& command, std::function<void(co
     std::string commandName;
     stream >> commandName;
     std::cout << "Sending command: " << commandName << std::endl;
+
     auto commanId = dev::helper::getCommandId(commandName);
+    if(commanId == dev::command::CommandId::None) {
+        std::cerr << "Invalid command: " << commandName << std::endl;
+        return;
+    }
+
     std::string commandInfo;
-    commandInfo = command.substr(commandName.size());
+    try {
+        commandInfo = command.substr(commandName.size());
+    } catch (const std::out_of_range& e) {
+        std::cerr << "Failed to extract command info: " << e.what() << std::endl;
+        return;
+    }
+
     auto commandPtr = dev::command::CommandFactory::getInstance().createCommand(commanId, commandInfo);
+    if (!commandPtr) {
+        std::cerr << "Failed to create command!" << std::endl;
+        return;
+    }
     auto callBack = [&, callBackToDevice](const dev::command::AbstractCommandResult& result) {
-        // std::cout << "Command completed with result: " << static_cast<uint16_t>(result.result()) << std::endl;
         callBackToDevice(result);
     };
     commandPtr->registerResultListener(callBack);
-    if (commandPtr) {
-        m_commandConsumer->addCommand(std::move(commandPtr));
-    }
+
+    m_commandConsumer->addCommand(std::move(commandPtr));
 }
 
 void CommandHandler::setDataStorage(const std::weak_ptr<dev::data::AbstractDataStorage>& dataStorage)

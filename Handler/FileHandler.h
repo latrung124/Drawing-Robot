@@ -50,7 +50,7 @@ public:
     int32_t openFile(const std::string& filePath, OpenMode mode);
     void closeFile(uint16_t handleIdx);
 
-    fstream& getFileHandle(uint16_t handleIdx);
+    fstream& getFileHandle(uint16_t handleIdx) const;
 };
 
 } // namespace File
