@@ -50,6 +50,10 @@ public:
         m_line.points.assign(line.points.begin(), line.points.end());
     }
 
+    Line getLine() const {
+        return m_line;
+    }
+
     void draw() {
         // Draw
         std::cout << "Drawing line" << std::endl;
@@ -77,10 +81,19 @@ public:
 class MoveCommand : public AbstractCommand {
 public:
     MoveCommand() = default;
+    MoveCommand(const Point& point) : point(point) {}
     ~MoveCommand() = default;
 
     CommandId id() const override {
         return CommandId::Move;
+    }
+
+    void setPoint(const Point& point) {
+        this->point = point;
+    }
+
+    Point getPoint() const {
+        return point;
     }
 
     void move() {
@@ -98,10 +111,6 @@ public:
     DrawCommandResult(CommandId id, CommandResult result)
         : AbstractCommandResult(id, result) {}
     ~DrawCommandResult() = default;
-
-    CommandResult result() const override {
-        return m_result;
-    }
 };
 
 class MoveCommandResult : public AbstractCommandResult {
@@ -110,10 +119,6 @@ public:
     MoveCommandResult(CommandId id, CommandResult result)
         : AbstractCommandResult(id, result) {}
     ~MoveCommandResult() = default;
-
-    CommandResult result() const override {
-        return m_result;
-    }
 };
 
 } // namespace dev::command

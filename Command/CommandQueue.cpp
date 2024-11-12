@@ -5,6 +5,7 @@
 */
 
 #include "CommandQueue.h"
+#include "AbstractDataStorage.h"
 
 namespace dev::command {
 

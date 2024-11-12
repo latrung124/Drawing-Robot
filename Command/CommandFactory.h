@@ -13,6 +13,11 @@
 
 namespace dev::command {
 
+class DimensionCommand;
+class DrawLineCommand;
+class MoveCommand;
+class DrawCircleCommand;
+
 class CommandFactory {
 public:
     static CommandFactory& getInstance();
@@ -21,10 +26,15 @@ public:
 
     using AbstractCommandPtr = std::unique_ptr<AbstractCommand>;
 
-    AbstractCommandPtr createCommand(CommandId id);
+    AbstractCommandPtr createCommand(CommandId id, const std::string& commandInfo);
 
 private:
     CommandFactory() = default;
+
+    std::unique_ptr<DimensionCommand> constructDimensionCommand(const std::string& commandInfo);
+    std::unique_ptr<DrawLineCommand> constructDrawLineCommand(const std::string& commandInfo);
+    std::unique_ptr<MoveCommand> constructMoveCommand(const std::string& commandInfo);
+    std::unique_ptr<DrawCircleCommand> constructDrawCircleCommand(const std::string& commandInfo);
 };
 
 } // namespace dev::command

@@ -12,7 +12,13 @@
 
 #include "AbstractCommand.h"
 
-namespace dev::command {
+namespace dev {
+
+namespace data {
+    class AbstractDataStorage;
+}
+
+namespace command {
 
 class CommandQueue {
 public:
@@ -31,5 +37,7 @@ private:
 };
 
 } // namespace dev::command
+
+} // namespace dev
 
 #endif // COMMANDQUEUE_H

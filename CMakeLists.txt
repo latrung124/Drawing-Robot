@@ -32,6 +32,9 @@ set(HEADER_FILES
 
     Feature/DrawFeature.h
 
+    DataStorage/AbstractDataStorage.h
+    DataStorage/RoboticDataStorage.h
+
     Device/AbstractDevice.h
     Device/RoboticDevice.h
 )
@@ -49,6 +52,8 @@ set(SOURCE_FILES
 
     Feature/DrawFeature.cpp
 
+    DataStorage/RoboticDataStorage.cpp
+
     Device/RoboticDevice.cpp
 )
 
@@ -63,6 +68,7 @@ target_include_directories(draw-robot PUBLIC
  ${CMAKE_SOURCE_DIR}/Handler
  ${CMAKE_SOURCE_DIR}/Command
  ${CMAKE_SOURCE_DIR}/Feature
+ ${CMAKE_SOURCE_DIR}/DataStorage
  ${CMAKE_SOURCE_DIR}/Helper
  ${CMAKE_SOURCE_DIR}/utils
  ${CMAKE_SOURCE_DIR}/Library/image-converter

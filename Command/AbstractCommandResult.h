@@ -23,9 +23,15 @@ public:
     AbstractCommandResult(CommandId id, CommandResult result)
         : m_id(id), m_result(result) {}
     virtual ~AbstractCommandResult() = default;
-    virtual CommandResult result() const = 0;
+    virtual CommandResult result() const {
+        return m_result;
+    }
 
-protected:
+    virtual CommandId id() const {
+        return m_id;
+    }
+
+private:
     CommandId m_id;
     CommandResult m_result;
 };

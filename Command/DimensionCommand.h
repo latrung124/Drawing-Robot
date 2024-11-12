@@ -30,8 +30,20 @@ public:
         m_dimension = dimension;
     }
 
+    Dimension getDimension() const {
+        return m_dimension;
+    }
+
 private:
     Dimension m_dimension;
+};
+
+class DimensionCommandResult : public AbstractCommandResult {
+public:
+    DimensionCommandResult() = delete;
+    DimensionCommandResult(CommandId id, CommandResult result)
+        : AbstractCommandResult(id, result) {}
+    ~DimensionCommandResult() = default;
 };
 
 } // namespace dev::command

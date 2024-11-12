@@ -7,8 +7,9 @@
 #include "RoboticDevice.h"
 #include "DrawFeature.h"
 
-namespace dev::helper {
+namespace dev {
 
+namespace helper {
 namespace feature {
 
 using DrawFeature = dev::feature::DrawFeature;
@@ -26,6 +27,8 @@ void attachFeatureHandler(AbstractFeature &feature, Args&&... args) {
     feature.addHandler(std::move(std::dynamic_pointer_cast<dev::handler::AbstractHandler>(handler)));
 }
 
-} // namespace feature
+} // namespace dev::helper::feature
 
 } // namespace dev::helper
+
+} // namespace dev

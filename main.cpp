@@ -5,8 +5,6 @@
 #include "DrawFeature.h"
 #include <string>
 
-std::mutex g_mutex;
-
 int main() {
     std::cout << "Hello, World!" << std::endl;
 
@@ -16,12 +14,11 @@ int main() {
     RoboticDevice roboticDevice;
     dev::helper::feature::attachFeature<dev::feature::DrawFeature>(roboticDevice, roboticDevice.deviceName());
 
-    //suspend the main thread for 10 seconds for attaching the debugger
+    //Suspend the main thread 10 seconds for attaching the debugger
     std::this_thread::sleep_for(std::chrono::seconds(10));
 
     roboticDevice.start();
     roboticDevice.run();
-    roboticDevice.stop();
 
     return 0;
 }
