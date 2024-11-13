@@ -5,6 +5,13 @@ project(CppLearning VERSION 1.0)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+set(CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
+find_package(PreCommit REQUIRED)
+
+# Check install pre-commit before running the build
+PreCommitInstallation()
+
 # Define the source directory as a macro
 add_definitions(-DSOURCE_DIR="${CMAKE_SOURCE_DIR}/Resources")
 

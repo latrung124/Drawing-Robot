@@ -1,13 +1,64 @@
+minimum_pre_commit_version: "2.17"
+
+default_language_version:
+  python: python3
+
 fail_fast: false
+
+# global excludes (Used python regex to match)
+# exclude: |
+#   (?x)(
+
+#   )$
+
 repos:
-  - repo: https://github.com/pocc/pre-commit-hooks
-    rev: master
+  - repo: local
     hooks:
+      - id: prettier
+        name: prettier
+        additional_dependencies: ["prettier@3.0.0-alpha.0"]
+        entry: prettier --write --list-different --ignore-unknown
+        language: node
+        types: [text]
+        files: \.(yaml|yml)$
+
       - id: clang-format
-        args: [--style=Google]
-      - id: clang-tidy
-      - id: oclint
-      - id: uncrustify
-      - id: cppcheck
-      - id: cpplint
-      - id: include-what-you-use
+        name: clang-format
+        entry: clang-format -i
+        args: ["-fallback-style=none"]
+        language: python
+        additional_dependencies: ["clang-format==16.0.6"]
+        types_or: [c, c++]
+        files: |
+          (?x)(
+              ^Command/.* |
+              ^DataStorage/.* |
+              ^Device/.* |
+              ^Feature/.* |
+              ^Handler/.* |
+              ^Helper/.* |
+              ^utils/.* |
+              ^Library/.* |
+              ^Library/draw-algorithm/.* |
+              ^Library/draw-algorithm/utils/.* |
+              ^Library/image-converter/.* |
+              ^Library/image-converter/utils/.* |
+              main.cpp
+          )$
+
+      - id: cmake-format
+        name: cmake-format
+        description: cmake-format can format your listfiles nicely so that they don't look like crap.
+        entry: cmake-format -i
+        language: python
+        types_or: [cmake]
+        additional_dependencies: ["cmakelang"]
+        files: |
+          (?x)(
+              CMakeList.txt |
+              ^cmake/.* |
+              ^CameraHandle/.* |
+              ^CameraStorage/.* |
+              ^Core/.* |
+              ^CustomVideoHandle/.*
+          )$

@@ -1,8 +1,9 @@
 /*
-* RoboticDataStorage.cpp
-* Author: Trung La
-* Description: This file contains the RoboticDataStorage class which is responsible for storing robotic data.
-*/
+ * RoboticDataStorage.cpp
+ * Author: Trung La
+ * Description: This file contains the RoboticDataStorage class which is responsible for storing
+ * robotic data.
+ */
 
 #include "RoboticDataStorage.h"
 
@@ -13,12 +14,14 @@ RoboticDataStorage::RoboticDataStorage()
 {
 }
 
-void RoboticDataStorage::storeData(const RoboticData& data) {
-    m_data = data;
+void RoboticDataStorage::storeData(const RoboticData &data)
+{
+	m_data = data;
 }
 
-RoboticData RoboticDataStorage::getData() const {
-    return m_data;
+RoboticData RoboticDataStorage::getData() const
+{
+	return m_data;
 }
 
 } // namespace dev::data

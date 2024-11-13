@@ -1,8 +1,8 @@
 /*
-* CommandQueue.h
-* Author: Trung La
-* Description: This file contains the CommandQueue class which is responsible for queuing commands.
-*/
+ * CommandQueue.h
+ * Author: Trung La
+ * Description: This file contains the CommandQueue class which is responsible for queuing commands.
+ */
 
 #ifndef COMMANDQUEUE_H
 #define COMMANDQUEUE_H
@@ -15,26 +15,27 @@
 namespace dev {
 
 namespace data {
-    class AbstractDataStorage;
+class AbstractDataStorage;
 }
 
 namespace command {
 
-class CommandQueue {
+class CommandQueue
+{
 public:
-    CommandQueue() = default;
-    ~CommandQueue() = default;
+	CommandQueue() = default;
+	~CommandQueue() = default;
 
-    void push(AbstractCommandPtr command);
-    AbstractCommandPtr pop();
+	void push(AbstractCommandPtr command);
+	AbstractCommandPtr pop();
 
-    bool isAvailable() const;
+	bool isAvailable() const;
 
 private:
-    std::queue<AbstractCommandPtr> m_commandQueue;
+	std::queue<AbstractCommandPtr> m_commandQueue;
 };
 
-} // namespace dev::command
+} // namespace command
 
 } // namespace dev
 

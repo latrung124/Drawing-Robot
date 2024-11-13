@@ -1,8 +1,8 @@
 /*
-* thread_guard.h
-* Author: Trung La
-* Description: This file contains the ThreadGuard class which is responsible for managing the thread.
-*/
+ * thread_guard.h
+ * Author: Trung La
+ * Description: This file contains the ThreadGuard class which is responsible for managing the thread.
+ */
 
 #ifndef THREAD_GUARD_H
 #define THREAD_GUARD_H
@@ -11,18 +11,25 @@
 
 namespace dev::utils {
 
-class thread_guard {
-    std::thread& m_thread;
-public:
-    thread_guard(std::thread& thread) : m_thread(thread) {}
-    ~thread_guard() {
-        if(m_thread.joinable()) {
-            m_thread.join();
-        }
-    }
+class thread_guard
+{
+	std::thread &m_thread;
 
-    thread_guard(thread_guard const&) = delete;
-    thread_guard& operator=(thread_guard const&) = delete;
+public:
+	thread_guard(std::thread &thread)
+	    : m_thread(thread)
+	{
+	}
+
+	~thread_guard()
+	{
+		if (m_thread.joinable()) {
+			m_thread.join();
+		}
+	}
+
+	thread_guard(const thread_guard &) = delete;
+	thread_guard &operator=(const thread_guard &) = delete;
 };
 
 } // namespace dev::utils

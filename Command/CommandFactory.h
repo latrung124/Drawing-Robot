@@ -1,13 +1,14 @@
 /*
-* CommandFactory.h
-* Author: Trung La
-* Description: This file contains the CommandFactory class which is responsible for creating commands.
-*/
+ * CommandFactory.h
+ * Author: Trung La
+ * Description: This file contains the CommandFactory class which is responsible for creating commands.
+ */
 
 #ifndef COMMANDFACTORY_H
 #define COMMANDFACTORY_H
 
 #include <memory>
+#include <string>
 
 #include "AbstractCommand.h"
 
@@ -18,21 +19,22 @@ class DrawLineCommand;
 class MoveCommand;
 class DrawCircleCommand;
 
-class CommandFactory {
+class CommandFactory
+{
 public:
-    static CommandFactory& getInstance();
+	static CommandFactory &getInstance();
 
-    virtual ~CommandFactory() = default;
+	virtual ~CommandFactory() = default;
 
-    AbstractCommandPtr createCommand(CommandId id, const std::string& commandInfo);
+	AbstractCommandPtr createCommand(CommandId id, const std::string &commandInfo);
 
 private:
-    CommandFactory() = default;
+	CommandFactory() = default;
 
-    std::unique_ptr<DimensionCommand> constructDimensionCommand(const std::string& commandInfo);
-    std::unique_ptr<DrawLineCommand> constructDrawLineCommand(const std::string& commandInfo);
-    std::unique_ptr<MoveCommand> constructMoveCommand(const std::string& commandInfo);
-    std::unique_ptr<DrawCircleCommand> constructDrawCircleCommand(const std::string& commandInfo);
+	std::unique_ptr<DimensionCommand> constructDimensionCommand(const std::string &commandInfo);
+	std::unique_ptr<DrawLineCommand> constructDrawLineCommand(const std::string &commandInfo);
+	std::unique_ptr<MoveCommand> constructMoveCommand(const std::string &commandInfo);
+	std::unique_ptr<DrawCircleCommand> constructDrawCircleCommand(const std::string &commandInfo);
 };
 
 } // namespace dev::command

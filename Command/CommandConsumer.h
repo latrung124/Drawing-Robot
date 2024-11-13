@@ -1,16 +1,17 @@
 /*
-* CommandConsumer.h
-* Author: Trung La
-* Description: This file contains the CommandConsumer class which is responsible for consuming commands.
-*/
+ * CommandConsumer.h
+ * Author: Trung La
+ * Description: This file contains the CommandConsumer class which is responsible for consuming
+ * commands.
+ */
 
 #ifndef COMMANDCONSUMER_H
 #define COMMANDCONSUMER_H
 
-#include <iostream>
-#include <mutex>
 #include "thread_guard.h"
 #include <condition_variable>
+#include <iostream>
+#include <mutex>
 
 #include "CommandQueue.h"
 
@@ -26,35 +27,35 @@ namespace command {
 
 using thread_guard = dev::utils::thread_guard;
 
-class CommandConsumer {
-
+class CommandConsumer
+{
 public:
-    CommandConsumer(const handler::CommandHandler *commandHandler);
-    ~CommandConsumer();
+	CommandConsumer(const handler::CommandHandler *commandHandler);
+	~CommandConsumer();
 
-    void start();
-    void stop();
+	void start();
+	void stop();
 
-    void addCommand(AbstractCommandPtr command);
+	void addCommand(AbstractCommandPtr command);
 
 private:
-    bool canProcessCommands() const;
-    void loop();
-    void consume(AbstractCommandPtr command);
+	bool canProcessCommands() const;
+	void loop();
+	void consume(AbstractCommandPtr command);
 
-    bool consumeDimensionCommand(AbstractCommand *command);
-    bool consumeDrawLineCommand(AbstractCommand *command);
-    bool consumeMoveCommand(AbstractCommand *command);
+	bool consumeDimensionCommand(AbstractCommand *command);
+	bool consumeDrawLineCommand(AbstractCommand *command);
+	bool consumeMoveCommand(AbstractCommand *command);
 
-    mutable std::mutex m_mutex;
-    std::condition_variable m_conditionVariable;
-    std::thread m_looper;
-    CommandQueue m_commandQueue;
-    bool m_isStop = false;
-    const handler::CommandHandler* m_commandHandler;
+	mutable std::mutex m_mutex;
+	std::condition_variable m_conditionVariable;
+	std::thread m_looper;
+	CommandQueue m_commandQueue;
+	bool m_isStop = false;
+	const handler::CommandHandler *m_commandHandler;
 };
 
-} // namespace dev::command
+} // namespace command
 
 } // namespace dev
 

@@ -1,8 +1,8 @@
 /*
-* CommandUtil.h
-* Author: Trung La
-* Description: This file contains the CommandUtil class which is responsible for handling commands.
-*/
+ * CommandUtil.h
+ * Author: Trung La
+ * Description: This file contains the CommandUtil class which is responsible for handling commands.
+ */
 
 #ifndef COMMANDUTIL_H
 #define COMMANDUTIL_H

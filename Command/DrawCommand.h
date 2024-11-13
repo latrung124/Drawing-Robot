@@ -1,8 +1,8 @@
 /*
-* DrawCommand.h
-* Author: Trung La
-* Description: This file contains the DrawCommand class which is responsible for handling commands.
-*/
+ * DrawCommand.h
+ * Author: Trung La
+ * Description: This file contains the DrawCommand class which is responsible for handling commands.
+ */
 
 #ifndef DRAWCOMMAND_H
 #define DRAWCOMMAND_H
@@ -15,107 +15,142 @@
 
 namespace dev::command {
 
-struct Point {
-    uint16_t x;
-    uint16_t y;
+struct Point
+{
+	uint16_t x;
+	uint16_t y;
 };
 
-struct Line {
-    std::vector<Point> points;
+struct Line
+{
+	std::vector<Point> points;
 };
 
-class DrawCommand : public AbstractCommand {
+class DrawCommand : public AbstractCommand
+{
 public:
-    DrawCommand() = default;
-    ~DrawCommand() = default;
+	DrawCommand() = default;
+	~DrawCommand() = default;
 
-    virtual CommandId id() const = 0;
+	virtual CommandId id() const = 0;
 
-    virtual void draw() = 0;
+	virtual void draw() = 0;
 };
 
-class DrawLineCommand : public DrawCommand {
+class DrawLineCommand : public DrawCommand
+{
 public:
-    DrawLineCommand() : m_line({}) {};
-    DrawLineCommand(const Line& line) {
-        m_line.points.assign(line.points.begin(), line.points.end());
-    };
-    ~DrawLineCommand() = default;
+	DrawLineCommand()
+	    : m_line({}){};
 
-    CommandId id() const override {
-        return CommandId::DrawLine;
-    }
+	DrawLineCommand(const Line &line)
+	{
+		m_line.points.assign(line.points.begin(), line.points.end());
+	};
 
-    void setLine(const Line& line) {
-        m_line.points.assign(line.points.begin(), line.points.end());
-    }
+	~DrawLineCommand() = default;
 
-    Line getLine() const {
-        return m_line;
-    }
+	CommandId id() const override
+	{
+		return CommandId::DrawLine;
+	}
 
-    void draw() {
-        std::cout << "Drawing line" << std::endl;
-    }
+	void setLine(const Line &line)
+	{
+		m_line.points.assign(line.points.begin(), line.points.end());
+	}
+
+	Line getLine() const
+	{
+		return m_line;
+	}
+
+	void draw()
+	{
+		std::cout << "Drawing line" << std::endl;
+	}
 
 private:
-    Line m_line;
+	Line m_line;
 };
 
-class DrawCircleCommand : public DrawCommand {
+class DrawCircleCommand : public DrawCommand
+{
 public:
-    DrawCircleCommand() = default;
-    ~DrawCircleCommand() = default;
+	DrawCircleCommand() = default;
+	~DrawCircleCommand() = default;
 
-    CommandId id() const override {
-        return CommandId::DrawCircle;
-    }
+	CommandId id() const override
+	{
+		return CommandId::DrawCircle;
+	}
 
-    void draw() {
-        std::cout << "Drawing circle" << std::endl;
-    }
+	void draw()
+	{
+		std::cout << "Drawing circle" << std::endl;
+	}
 };
 
-class MoveCommand : public AbstractCommand {
+class MoveCommand : public AbstractCommand
+{
 public:
-    MoveCommand() = default;
-    MoveCommand(const Point& point) : point(point) {}
-    ~MoveCommand() = default;
+	MoveCommand() = default;
 
-    CommandId id() const override {
-        return CommandId::Move;
-    }
+	MoveCommand(const Point &point)
+	    : point(point)
+	{
+	}
 
-    void setPoint(const Point& point) {
-        this->point = point;
-    }
+	~MoveCommand() = default;
 
-    Point getPoint() const {
-        return point;
-    }
+	CommandId id() const override
+	{
+		return CommandId::Move;
+	}
 
-    void move() {
-        std::cout << "Moving" << std::endl;
-    }
+	void setPoint(const Point &point)
+	{
+		this->point = point;
+	}
+
+	Point getPoint() const
+	{
+		return point;
+	}
+
+	void move()
+	{
+		std::cout << "Moving" << std::endl;
+	}
 
 private:
-    Point point;
+	Point point;
 };
 
-class DrawCommandResult : public AbstractCommandResult {
+class DrawCommandResult : public AbstractCommandResult
+{
 public:
-    DrawCommandResult() = delete;
-    DrawCommandResult(CommandId id, CommandResult result)
-        : AbstractCommandResult(id, result) {}
-    ~DrawCommandResult() = default;
+	DrawCommandResult() = delete;
+
+	DrawCommandResult(CommandId id, CommandResult result)
+	    : AbstractCommandResult(id, result)
+	{
+	}
+
+	~DrawCommandResult() = default;
 };
 
-class MoveCommandResult : public AbstractCommandResult {
+class MoveCommandResult : public AbstractCommandResult
+{
 public:
-    MoveCommandResult() = delete;
-    MoveCommandResult(CommandId id, CommandResult result)
-        : AbstractCommandResult(id, result) {}
-    ~MoveCommandResult() = default;
+	MoveCommandResult() = delete;
+
+	MoveCommandResult(CommandId id, CommandResult result)
+	    : AbstractCommandResult(id, result)
+	{
+	}
+
+	~MoveCommandResult() = default;
 };
 
 } // namespace dev::command

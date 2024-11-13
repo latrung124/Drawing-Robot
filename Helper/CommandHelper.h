@@ -1,8 +1,8 @@
 /*
-* CommandHelper.h
-* Author: Trung La
-* Description: This file contains the CommandHelper class which is responsible for handling commands.
-*/
+ * CommandHelper.h
+ * Author: Trung La
+ * Description: This file contains the CommandHelper class which is responsible for handling commands.
+ */
 
 #ifndef COMMANDHELPER_H
 #define COMMANDHELPER_H
@@ -12,18 +12,19 @@
 
 namespace dev::helper {
 
-using  CommandId = dev::command::CommandId;
+using CommandId = dev::command::CommandId;
 
-CommandId getCommandId(const std::string_view& command) {
-    //find command in map with string view
-    using namespace dev::command;
+CommandId getCommandId(const std::string_view &command)
+{
+	// find command in map with string view
+	using namespace dev::command;
 
-    auto it = gCommandIdMap.find(command);
-    if (it != gCommandIdMap.end()) {
-        return it->second;
-    }
+	auto it = gCommandIdMap.find(command);
+	if (it != gCommandIdMap.end()) {
+		return it->second;
+	}
 
-    return CommandId::None;
+	return CommandId::None;
 }
 
 } // namespace dev::helper
